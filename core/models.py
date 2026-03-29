@@ -8,19 +8,26 @@ class StaffMember(models.Model):
     def __str__(self):
         return self.name
 
+from django.db import models
+
 class Visitor(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Ожидание'),
         ('approved', 'Одобрено'),
-        ('rejected', 'Отказано')
     ]
     
     full_name = models.CharField(max_length=255)
-    passport = models.CharField("Серия и номер паспорта", max_length=50, unique=False)
+    passport = models.CharField("Серия и номер паспорта", max_length=50)
     phone = models.CharField(max_length=20)
     organization = models.CharField(max_length=255)
 
-    escort = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL)
+    escort = models.ForeignKey(
+        'self', 
+        null=False,
+        blank=False,
+        on_delete=models.CASCADE,
+        related_name='accompanied_visitors'
+    )
     
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)

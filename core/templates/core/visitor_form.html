@@ -1,11 +1,12 @@
 {% extends 'core/base.html' %}
 {% block content %}
+
 <div class="row justify-content-center">
     <div class="col-md-10">
         <div class="card border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
             <div class="row g-0">
                 <div class="col-md-7 p-5 bg-white">
-                    <h2 class="mb-4 fw-bold">Регистрация в PassID</h2>
+                    <h2 class="mb-4 fw-bold"></h2>
                     <form method="POST">
                         {% csrf_token %}
                         <div class="mb-3">
@@ -33,8 +34,8 @@
                         <span class="request-department">СОПРОВОЖДАЮЩИЙ</span>
                     </div>
                     <p class="text-muted small mb-4">Выберите человека, который уже находится на объекте и готов вас встретить.</p>
-                    <select name="escort" class="form-select mb-5">
-                        <option value="">Без сопровождающего</option>
+                    <select name="escort" class="form-select mb-5" required>
+                        <option value="" disabled selected>Выберите сопровождающего</option>
                         {% for person in escorts %}
                         <option value="{{ person.id }}">{{ person.full_name }}</option>
                         {% endfor %}
@@ -49,4 +50,5 @@
         </div>
     </div>
 </div>
+
 {% endblock %}

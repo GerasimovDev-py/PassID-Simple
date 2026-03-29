@@ -6,13 +6,11 @@
     <a href="{% url 'index' %}" class="btn btn-outline-secondary">Выход</a>
 </div>
 
-<!-- Блок, который будет обновляться -->
 <div id="visitors-list">
     {% include 'core/dashboard_partial.html' %}
 </div>
 
 <script>
-// Автообновление списка заявок каждые 5 секунд
 function updateDashboard() {
     fetch("{% url 'dashboard_partial' %}")
         .then(response => {
@@ -29,10 +27,8 @@ function updateDashboard() {
         });
 }
 
-// Запускаем обновление каждые 5 секунд
 setInterval(updateDashboard, 5000);
 
-// Обновляем сразу при загрузке страницы
 window.addEventListener('load', updateDashboard);
 </script>
 
