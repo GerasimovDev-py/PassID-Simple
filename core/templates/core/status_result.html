@@ -1,0 +1,43 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<div class="row justify-content-center" style="min-height: 70vh;">
+    <div class="col-md-7">
+        <div class="request-item bg-white p-5">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold">Статус вашего пропуска</h2>
+                <p class="text-muted">Паспорт: <strong>{{ passport }}</strong></p>
+            </div>
+
+            {% if visitor.status == 'approved' %}
+                <div class="text-center mb-4" style="color: #48bb78;">
+                    <h1 style="font-size: 4rem;">✓</h1>
+                    <h3 class="fw-bold">Пропуск одобрен!</h3>
+                    <p class="lead">Вы можете пройти на объект.<br>
+                    Пожалуйста, предъявите паспорт на посту охраны.</p>
+                </div>
+            {% elif visitor.status == 'rejected' %}
+                <div class="text-center mb-4" style="color: #f5576c;">
+                    <h1 style="font-size: 4rem;">✕</h1>
+                    <h3 class="fw-bold text-danger">В доступе отказано</h3>
+                    <p class="text-muted">К сожалению, ваша заявка была отклонена сотрудником службы безопасности.</p>
+                </div>
+            {% else %}
+                <div class="text-center mb-4" style="color: #f4a261;">
+                    <h1 style="font-size: 4rem;">⏳</h1>
+                    <h3 class="fw-bold">Заявка на рассмотрении</h3>
+                    <p class="lead">Ваш пропуск ещё не одобрен.<br>
+                    Пожалуйста, дождитесь подтверждения от сотрудника охраны.</p>
+                </div>
+            {% endif %}
+
+            <div class="text-center mt-5">
+                <a href="{% url 'index' %}" class="btn btn-outline-secondary px-5">
+                    Вернуться на главную
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

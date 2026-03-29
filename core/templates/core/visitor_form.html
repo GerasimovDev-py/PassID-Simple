@@ -1,0 +1,52 @@
+{% extends 'core/base.html' %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+            <div class="row g-0">
+                <div class="col-md-7 p-5 bg-white">
+                    <h2 class="mb-4 fw-bold">Регистрация в PassID</h2>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label class="form-label">ФИО полностью</label>
+                            <input type="text" name="full_name" class="form-control" placeholder="Иванов Иван Иванович" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Паспорт (серия/номер)</label>
+                                <input type="text" name="passport" class="form-control" placeholder="0000 000000" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Телефон</label>
+                                <input type="text" name="phone" class="form-control" placeholder="+7..." required>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label">Организация</label>
+                            <input type="text" name="organization" class="form-control" placeholder="ООО 'Вектор'" required>
+                        </div>
+                </div>
+                
+                <div class="col-md-5 p-5" style="background: #f8fafc; border-left: 1px solid #edf2f7;">
+                    <div class="d-flex align-items-center mb-4">
+                        <span class="request-department">СОПРОВОЖДАЮЩИЙ</span>
+                    </div>
+                    <p class="text-muted small mb-4">Выберите человека, который уже находится на объекте и готов вас встретить.</p>
+                    <select name="escort" class="form-select mb-5">
+                        <option value="">Без сопровождающего</option>
+                        {% for person in escorts %}
+                        <option value="{{ person.id }}">{{ person.full_name }}</option>
+                        {% endfor %}
+                    </select>
+                    
+                    <button type="submit" class="btn-passid w-100 mt-4">
+                        СФОРМИРОВАТЬ ЗАПРОС НА ДОПУСК
+                    </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

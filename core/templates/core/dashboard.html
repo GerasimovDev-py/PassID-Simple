@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <h1 class="fw-bold text-dark">Панель контроля PassID</h1>
+    <a href="{% url 'index' %}" class="btn btn-outline-secondary">Выход</a>
+</div>
+
+<!-- Блок, который будет обновляться -->
+<div id="visitors-list">
+    {% include 'core/dashboard_partial.html' %}
+</div>
+
+<script>
+// Автообновление списка заявок каждые 5 секунд
+function updateDashboard() {
+    fetch("{% url 'dashboard_partial' %}")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ошибка сервера: ' + response.status);
+            }
+            return response.text();
+        })
+        .then(html => {
+            document.getElementById('visitors-list').innerHTML = html;
+        })
+        .catch(error => {
+            console.error('Ошибка обновления дашборда:', error);
+        });
+}
+
+// Запускаем обновление каждые 5 секунд
+setInterval(updateDashboard, 5000);
+
+// Обновляем сразу при загрузке страницы
+window.addEventListener('load', updateDashboard);
+</script>
+
+{% endblock %}

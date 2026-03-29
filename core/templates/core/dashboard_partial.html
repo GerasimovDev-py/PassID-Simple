@@ -1,0 +1,34 @@
+{% for v in visitors %}
+<div class="col-12">
+    <div class="request-item {{ v.status }}">
+        <div class="request-header">
+            <div class="request-author">{{ v.full_name }}</div>
+            <div class="request-date">{{ v.created_at|date:"H:i" }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="request-organization">🏢 {{ v.organization }}</div>
+                <div class="small text-muted">📞 {{ v.phone }}</div>
+            </div>
+            <div class="col-md-4">
+                {% if v.escort %}
+                <div class="request-text">🤝 Ожидает: <strong>{{ v.escort.full_name }}</strong></div>
+                {% else %}
+                <div class="text-muted small">Без сопровождения</div>
+                {% endif %}
+            </div>
+            <div class="col-md-4 text-end">
+                {% if v.status == 'pending' %}
+                <a href="{% url 'approve' v.id %}" class="btn btn-sm btn-primary py-2 px-4 shadow-sm" style="border-radius: 10px;">
+                    ПОДТВЕРДИТЬ ВХОД
+                </a>
+                {% else %}
+                <span class="badge bg-success p-2 px-3" style="border-radius: 10px;">ДОПУЩЕН</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% empty %}
+<p class="text-center text-muted">Заявок пока нет...</p>
+{% endfor %}
