@@ -1,0 +1,56 @@
+{% for v in visitors %}
+{% if v.status != 'departed' %}
+<div class="col-12">
+    <div class="request-item {{ v.status }}">
+        <div class="request-header">
+            <div class="request-author">{{ v.full_name }}</div>
+            <div class="request-date">{{ v.created_at|date:"H:i" }}</div>
+        </div>
+        
+        <div class="row align-items-center">
+            <div class="col-md-3">
+                <div class="small text-muted">
+                    📄 {{ v.get_document_type_display }}<br>
+                    <strong>{{ v.document_number }}</strong>
+                </div>
+                <div class="small text-muted mt-1">
+                    🏢 {{ v.organization }}
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="request-text">
+                    <strong>Сопровождающий:</strong><br>
+                    <span style="color: #667eea; font-weight: 500;">{{ v.escort.full_name }}</span>
+                </div>
+            </div>
+
+
+            <div class="col-md-3">
+                {% if v.valid_until %}
+                <div class="small text-muted">
+                    Действует до:<br>
+                    <strong>{{ v.valid_until|date:"d.m.Y H:i" }}</strong>
+                </div>
+                {% endif %}
+            </div>
+
+
+            <div class="col-md-2 text-end">
+                {% if v.status == 'pending' %}
+                <a href="{% url 'approve' v.id %}" class="btn btn-sm btn-primary py-2 px-4 shadow-sm">
+                    ПОДТВЕРДИТЬ ВХОД
+                </a>
+                {% elif v.status == 'approved' %}
+                <button onclick="markDeparted({{ v.id }})" class="btn btn-sm btn-success py-2 px-4 shadow-sm">
+                    УШЁЛ
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% empty %}
+<p class="text-center text-muted">Активных заявок пока нет...</p>
+{% endfor %}

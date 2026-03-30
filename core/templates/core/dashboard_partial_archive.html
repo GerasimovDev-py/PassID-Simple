@@ -1,0 +1,43 @@
+{% for v in visitors %}
+{% if v.status == 'departed' %}
+<div class="col-12">
+    <div class="request-item approved">
+        <div class="request-header">
+            <div class="request-author">{{ v.full_name }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-5">
+                <div class="small text-muted">
+                    <strong>Пришёл:</strong> 
+                    {% if v.arrival_time %}
+                        {{ v.arrival_time|date:"d.m.Y H:i" }}
+                    {% else %}
+                        <span class="text-danger">Не зафиксировано</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-5">
+                <div class="small text-muted">
+                    <strong>Ушёл:</strong> 
+                    {% if v.departure_time %}
+                        {{ v.departure_time|date:"d.m.Y H:i" }}
+                    {% else %}
+                        <span class="text-danger">Не зафиксировано</span>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="small text-muted text-end">
+                    Сопровождающий
+                </div>
+            </div>
+        </div>
+        <div class="small text-muted">
+            {{ v.escort.full_name }}
+        </div>
+    </div>
+</div>
+{% endif %}
+{% empty %}
+<p class="text-center text-muted">Архив пока пуст...</p>
+{% endfor %}
