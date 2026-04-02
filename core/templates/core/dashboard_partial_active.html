@@ -21,10 +21,9 @@
             <div class="col-md-4">
                 <div class="request-text">
                     <strong>Сопровождающий:</strong><br>
-                    <span style="color: #667eea; font-weight: 500;">{{ v.escort.full_name }}</span>
+                    <span style="color: #667eea;">{{ v.escort.full_name }}</span>
                 </div>
             </div>
-
 
             <div class="col-md-3">
                 {% if v.valid_until %}
@@ -34,7 +33,6 @@
                 </div>
                 {% endif %}
             </div>
-
 
             <div class="col-md-2 text-end">
                 {% if v.status == 'pending' %}

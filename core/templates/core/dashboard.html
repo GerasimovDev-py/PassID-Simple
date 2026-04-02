@@ -6,47 +6,47 @@
     <a href="{% url 'index' %}" class="btn btn-outline-secondary">Выход</a>
 </div>
 
-<ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
-    <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" onclick="switchTab('active')">
-            Активные заявки
-        </button>
-    </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="archive-tab" data-bs-toggle="tab" data-bs-target="#archive" type="button" onclick="switchTab('archive')">
-            Архив
-        </button>
-    </li>
-</ul>
 
-<div class="tab-content" id="myTabContent">
+<div class="mb-4">
+    <a href="?tab=active" class="btn {% if request.GET.tab != 'archive' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+        Активные заявки
+    </a>
+    <a href="?tab=archive" class="btn {% if request.GET.tab == 'archive' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+        Архив
+    </a>
+</div>
 
-    <div class="tab-pane fade show active" id="active">
-        <div id="active-list">
-            {% include 'core/dashboard_partial_active.html' %}
-        </div>
-    </div>
-
-    <div class="tab-pane fade" id="archive">
+<div class="row">
+    {% if request.GET.tab == 'archive' %}
         <div id="archive-list">
             {% include 'core/dashboard_partial_archive.html' %}
         </div>
-    </div>
+    {% else %}
+        <div id="active-list">
+            {% include 'core/dashboard_partial_active.html' %}
+        </div>
+    {% endif %}
 </div>
 
 <script>
-function switchTab(tab) {
-    if (tab === 'active') {
-        document.getElementById('active-tab').classList.add('active');
-        document.getElementById('archive-tab').classList.remove('active');
-        document.getElementById('active').classList.add('show', 'active');
-        document.getElementById('archive').classList.remove('show', 'active');
-    } else {
-        document.getElementById('archive-tab').classList.add('active');
-        document.getElementById('active-tab').classList.remove('active');
-        document.getElementById('archive').classList.add('show', 'active');
-        document.getElementById('active').classList.remove('show', 'active');
+function markDeparted(pk) {
+    if (!confirm('Отметить посетителя как ушедшего?')) {
+        return;
     }
+
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = `/departed/${pk}/`;
+    
+    const csrf = document.createElement('input');
+    csrf.type = 'hidden';
+    csrf.name = 'csrfmiddlewaretoken';
+    csrf.value = '{{ csrf_token }}';
+    form.appendChild(csrf);
+    
+    document.body.appendChild(form);
+    form.submit();
 }
 
 
@@ -58,41 +58,8 @@ function updateActive() {
         });
 }
 
-
-function updateArchive() {
-    fetch("{% url 'dashboard_partial' %}?tab=archive")
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById('archive-list').innerHTML = html;
-        });
-}
-
-
-function markDeparted(pk) {
-    if (!confirm('Отметить посетителя как ушедшего?')) return;
-
-    fetch(`/departed/${pk}/`, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': '{{ csrf_token }}'
-        }
-    })
-    .then(response => {
-        if (response.ok) {
-            updateActive();
-            updateArchive();
-        } else {
-            alert('Ошибка при обновлении статуса');
-        }
-    })
-    .catch(error => console.error('Error:', error));
-}
-
-setInterval(updateActive, 10000);
-window.addEventListener('load', () => {
-    updateActive();
-    updateArchive();
-});
+setInterval(updateActive, 5000);
+window.addEventListener('load', updateActive);
 </script>
 
 {% endblock %}
