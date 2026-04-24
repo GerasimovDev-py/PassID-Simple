@@ -1,54 +1,53 @@
 {% for v in visitors %}
-{% if v.status != 'departed' %}
-<div class="col-12">
-    <div class="request-item {{ v.status }}">
-        <div class="request-header">
-            <div class="request-author">{{ v.full_name }}</div>
-            <div class="request-date">{{ v.created_at|date:"H:i" }}</div>
-        </div>
-        
-        <div class="row align-items-center">
-            <div class="col-md-3">
-                <div class="small text-muted">
-                    📄 {{ v.get_document_type_display }}<br>
-                    <strong>{{ v.document_number }}</strong>
-                </div>
-                <div class="small text-muted mt-1">
-                    🏢 {{ v.organization }}
-                </div>
-            </div>
+    {% if v.status != 'departed' %}
+        {% comment %}Проверяем, что сегодняшняя дата равна дате пропуска{% endcomment %}
+        {% now "Y-m-d" as today %}
+        {% with v.valid_until|date:"Y-m-d" as pass_date %}
+            {% if today == pass_date %}
+            <div class="request-item {{ v.status }}">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="flex-grow-1">
+                        <h5 class="mb-1">{{ v.full_name }}</h5>
+                        
+                        <p class="mb-3" style="font-size: 1.35rem; font-weight: 700; color: #dc3545;">
+                            {{ v.get_document_type_display }} №<span style="font-size: 1.55rem; font-weight: 800;">{{ v.document_number }}</span>
+                        </p>
 
-            <div class="col-md-4">
-                <div class="request-text">
-                    <strong>Сопровождающий:</strong><br>
-                    <span style="color: #667eea;">{{ v.escort.full_name }}</span>
-                </div>
-            </div>
+                        <div>
+                            <strong style="color: #667eea;">ОТВЕТСТВЕННЫЙ:</strong> 
+                            <span style="font-size: 1.1rem; font-weight: 500; color: #07aa22ff;">{{ v.escort_name }}</span>
+                        </div>
+                        
+                        {% if v.escort_phone %}
+                        <small class="text-muted">Тел.: {{ v.escort_phone }}</small>
+                        {% endif %}
+                    </div>
 
-            <div class="col-md-3">
-                {% if v.valid_until %}
-                <div class="small text-muted">
-                    Действует до:<br>
-                    <strong>{{ v.valid_until|date:"d.m.Y H:i" }}</strong>
-                </div>
-                {% endif %}
-            </div>
+                    <div class="text-end">
+                        {% if v.status == 'pending' %}
+                        <a href="{% url 'approve_visitor' v.id %}" class="btn btn-primary btn-sm me-2 py-2 px-4">Подтвердить вход</a>
+                        {% endif %}
+                        
+                        {% if v.status == 'approved' %}
+                        <button onclick="markDeparted({{ v.id }})" class="btn btn-danger btn-sm me-2 py-2 px-4">Ушёл</button>
+                        {% endif %}
 
-            <div class="col-md-2 text-end">
-                {% if v.status == 'pending' %}
-                <a href="{% url 'approve' v.id %}" class="btn btn-sm btn-primary py-2 px-4 shadow-sm">
-                    ПОДТВЕРДИТЬ ВХОД
-                </a>
-                {% elif v.status == 'approved' %}
-                <button onclick="markDeparted({{ v.id }})" class="btn btn-sm btn-success py-2 px-4 shadow-sm">
-                    УШЁЛ
-                </button>
-                {% endif %}
+                        {% if v.comment %}
+                        <button onclick="showComment('{{ v.comment|escapejs }}')" 
+                                class="btn btn-info btn-sm py-2 px-4">
+                            Комментарий
+                        </button>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <small class="text-muted d-block mt-3">
+                    Заявка от {{ v.created_at|date:"d.m.Y H:i" }} | Действует: {{ v.valid_until|date:"d.m.Y" }}
+                </small>
             </div>
-        </div>
-    </div>
-</div>
-{% endif %}
+            {% endif %}
+        {% endwith %}
+    {% endif %}
 {% empty %}
-<p class="text-center text-muted">Активных заявок пока нет...</p>
+    <p class="text-center text-muted py-5">Нет активных заявок на сегодня</p>
 {% endfor %}

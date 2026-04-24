@@ -1,0 +1,55 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">PassID</h1>
+        <p class="lead text-muted">Система электронных пропусков</p>
+    </div>
+
+    <div class="row justify-content-center g-4">
+        <!-- Кнопка для оформления пропуска -->
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 shadow border-0" style="border-radius: 20px;">
+                <div class="card-body p-5 text-center d-flex flex-column">
+                    <i class="bi bi-person-badge mb-4" style="font-size: 4.5rem; color: #0d6efd;"></i>
+                    <h3 class="mb-3">Оформить заявку на пропуск</h3>
+                    <p class="text-muted flex-grow-1">Для оформления пропуска необходима авторизация</p>
+                    <a href="{% url 'responsible_login' %}" class="btn btn-primary btn-lg mt-auto py-3">
+                        Оформить пропуск
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Кнопка для входа охраны -->
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 shadow border-0" style="border-radius: 20px;">
+                <div class="card-body p-5 text-center d-flex flex-column">
+                    <i class="bi bi-shield-lock mb-4" style="font-size: 4.5rem; color: #198754;"></i>
+                    <h3 class="mb-3">Вход для сотрудника безопасности</h3>
+                    <p class="text-muted flex-grow-1">Панель управления пропусками</p>
+                    <a href="{% url 'staff_login' %}" class="btn btn-outline-secondary btn-lg mt-auto py-3">
+                        Войти
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Кнопка для админ доступа (видна всем, но доступ только для админов) -->
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 shadow border-0" style="border-radius: 20px; background: #fff3e0;">
+                <div class="card-body p-5 text-center d-flex flex-column">
+                    <i class="bi bi-gear-fill mb-4" style="font-size: 4.5rem; color: #fd7e14;"></i>
+                    <h3 class="mb-3">Админ Доступ</h3>
+                    <p class="text-muted flex-grow-1">Управление ответственными лицами</p>
+                    <a href="{% url 'admin_access' %}" class="btn btn-warning btn-lg mt-auto py-3">
+                        Управление
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

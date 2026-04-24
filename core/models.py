@@ -1,47 +1,46 @@
 from django.db import models
-from django.utils import timezone
-from datetime import timedelta
+from django.contrib.auth.models import User
 
 class Visitor(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Ожидание'),
-        ('approved', 'Допущен'),
+        ('approved', 'Одобрено'),
         ('departed', 'Ушёл'),
     ]
 
     DOCUMENT_TYPE_CHOICES = [
         ('passport_rf', 'Паспорт РФ'),
-        ('international_passport', 'Загранпаспорт'),
-        ('driver_license', 'Водительское удостоверение'),
+        ('car_plate', 'Автомобильный номер'),
         ('other', 'Другой документ'),
     ]
 
-    full_name = models.CharField("ФИО полностью", max_length=255)
-    document_type = models.CharField("Тип документа", max_length=30, choices=DOCUMENT_TYPE_CHOICES, default='passport_rf')
+    full_name = models.CharField("ФИО посетителя", max_length=255)
+    document_type = models.CharField("Тип документа", max_length=50, choices=DOCUMENT_TYPE_CHOICES)
     document_number = models.CharField("Номер документа", max_length=50)
-    phone = models.CharField("Телефон", max_length=20, blank=True, null=True)
-
-    escort = models.ForeignKey(
-        'self',
-        null=True,
-        blank=True,
-        on_delete=models.CASCADE,
-        related_name='accompanied_visitors'
-    )
-
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    
+    escort_name = models.CharField("ФИО ответственного", max_length=255)
+    escort_phone = models.CharField("Телефон ответственного", max_length=20, blank=True)
+    
+    valid_until = models.DateTimeField("Действует до")
+    kpp = models.CharField("КПП", max_length=10, choices=[('kpp1', 'КПП-1'), ('kpp2', 'КПП-2')])
+    comment = models.TextField("Комментарий", blank=True, null=True)
+    
+    status = models.CharField("Статус", max_length=20, choices=STATUS_CHOICES, default='pending')
     arrival_time = models.DateTimeField("Время прихода", null=True, blank=True)
     departure_time = models.DateTimeField("Время ухода", null=True, blank=True)
-    valid_until = models.DateTimeField("Действует до", null=True, blank=True)
-
-    organization = models.CharField("Организация", max_length=255, blank=True, null=True)
-
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.full_name} — {self.document_number}"
+        return f"{self.full_name} — {self.kpp}"
 
-    class Meta:
-        verbose_name = "Посетитель"
-        verbose_name_plural = "Посетители"
-        ordering = ['-created_at']
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    kpp = models.CharField(max_length=10, choices=[('kpp1', 'КПП-1'), ('kpp2', 'КПП-2')], default='kpp1', blank=True, null=True)
+    is_responsible = models.BooleanField("Ответственный", default=False)
+    responsible_full_name = models.CharField("ФИО ответственного", max_length=255, blank=True)
+    responsible_phone = models.CharField("Телефон ответственного", max_length=20, blank=True)
+
+    def __str__(self):
+        role = "Ответственный" if self.is_responsible else "Охрана"
+        return f"{self.user.username} — {role}"

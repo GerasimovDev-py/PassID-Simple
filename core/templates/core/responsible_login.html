@@ -5,7 +5,7 @@
     <div class="col-md-5">
         <div class="card shadow border-0" style="border-radius: 20px;">
             <div class="card-body p-5">
-                <h3 class="text-center mb-4">Вход в панель охраны</h3>
+                <h3 class="text-center mb-4">Авторизация ответственного</h3>
                 
                 {% if messages %}
                     {% for message in messages %}
@@ -18,7 +18,7 @@
 
                     <div class="mb-3">
                         <label class="form-label">Логин</label>
-                        <input type="text" name="username" class="form-control" placeholder="KPP-1 или KPP-2" required autofocus>
+                        <input type="text" name="username" class="form-control" placeholder="Ваш логин" required autofocus>
                     </div>
 
                     <div class="mb-4">
@@ -27,9 +27,12 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100 py-3">
-                        Войти
+                        Войти и оформить пропуск
                     </button>
                 </form>
+
+                <div class="text-center mt-4 small text-muted">
+                </div>
             </div>
         </div>
     </div>

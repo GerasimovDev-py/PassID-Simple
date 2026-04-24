@@ -1,39 +1,56 @@
 {% extends 'core/base.html' %}
 {% block content %}
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h1 class="fw-bold text-dark">Панель охраны PassID</h1>
-    <a href="{% url 'index' %}" class="btn btn-outline-secondary">Выход</a>
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Панель охраны — {{ kpp_name }}</h2>
+        <a href="{% url 'staff_logout' %}" class="btn btn-outline-danger">Выйти</a>
+    </div>
+
+    <div class="mb-4">
+        <a href="?tab=active" class="btn {% if request.GET.tab != 'archive' %}btn-primary{% else %}btn-outline-primary{% endif %} me-2">
+            Активные заявки
+        </a>
+        <a href="?tab=archive" class="btn {% if request.GET.tab == 'archive' %}btn-primary{% else %}btn-outline-primary{% endif %}">
+            Архив
+        </a>
+    </div>
+
+    <div class="row">
+        {% if request.GET.tab == 'archive' %}
+            <div id="archive-list">
+                {% include 'core/dashboard_partial_archive.html' %}
+            </div>
+        {% else %}
+            <div id="active-list">
+                {% include 'core/dashboard_partial_active.html' %}
+            </div>
+        {% endif %}
+    </div>
 </div>
 
-
-<div class="mb-4">
-    <a href="?tab=active" class="btn {% if request.GET.tab != 'archive' %}btn-primary{% else %}btn-outline-primary{% endif %}">
-        Активные заявки
-    </a>
-    <a href="?tab=archive" class="btn {% if request.GET.tab == 'archive' %}btn-primary{% else %}btn-outline-primary{% endif %}">
-        Архив
-    </a>
-</div>
-
-<div class="row">
-    {% if request.GET.tab == 'archive' %}
-        <div id="archive-list">
-            {% include 'core/dashboard_partial_archive.html' %}
+<!-- Модальное окно для комментария -->
+<div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="commentModalLabel">Комментарий к заявке</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="commentText" style="white-space: pre-wrap; font-size: 1.05rem; line-height: 1.6;">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
         </div>
-    {% else %}
-        <div id="active-list">
-            {% include 'core/dashboard_partial_active.html' %}
-        </div>
-    {% endif %}
+    </div>
 </div>
 
 <script>
+// Отметить как ушедшего
 function markDeparted(pk) {
-    if (!confirm('Отметить посетителя как ушедшего?')) {
-        return;
-    }
-
+    if (!confirm('Отметить посетителя как ушедшего?')) return;
 
     const form = document.createElement('form');
     form.method = 'POST';
@@ -49,13 +66,31 @@ function markDeparted(pk) {
     form.submit();
 }
 
+// Показать комментарий — улучшенная версия
+function showComment(comment) {
+    if (!comment || comment.trim() === '') {
+        alert('Комментарий пустой');
+        return;
+    }
+    
+    document.getElementById('commentText').innerHTML = 
+        '<p>' + comment.replace(/\n/g, '<br>') + '</p>';
+    
+    // Используем Bootstrap 5 правильный способ
+    const modalElement = document.getElementById('commentModal');
+    const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+    modal.show();
+}
 
+// Автообновление активных заявок
 function updateActive() {
     fetch("{% url 'dashboard_partial' %}?tab=active")
         .then(response => response.text())
         .then(html => {
-            document.getElementById('active-list').innerHTML = html;
-        });
+            const activeList = document.getElementById('active-list');
+            if (activeList) activeList.innerHTML = html;
+        })
+        .catch(error => console.error('Ошибка обновления:', error));
 }
 
 setInterval(updateActive, 5000);

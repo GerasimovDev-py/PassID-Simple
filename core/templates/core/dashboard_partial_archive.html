@@ -2,21 +2,20 @@
     {% if v.status == 'departed' %}
     <div class="request-item departed">
         <div class="d-flex justify-content-between align-items-start">
-            <div>
+            <div class="flex-grow-1">
                 <h5 class="mb-2">{{ v.full_name }}</h5>
-                <p class="text-muted mb-1">
-                    <strong>Документ:</strong> 
-                    {{ v.get_document_type_display }} №{{ v.document_number }}
+                <p class="mb-3" style="font-size: 1.35rem; font-weight: 700; color: #dc3545;">
+                    {{ v.get_document_type_display }} №<span style="font-size: 1.55rem; font-weight: 800;">{{ v.document_number }}</span>
                 </p>
                 
-                <div class="mt-3">
-                    <strong style="color: #667eea;">Сопровождающий:</strong><br>
-                    <span style="font-size: 1.05rem;">{{ v.escort.full_name }}</span>
+                <div>
+                    <strong style="color: #667eea;">ОТВЕТСТВЕННЫЙ:</strong> 
+                    <span style="font-size: 1.1rem; font-weight: 500; color: #07aa22ff;">{{ v.escort_name }}</span>
                 </div>
 
                 {% if v.escort_phone %}
                 <p class="mb-1">
-                    <strong>Телефон сопровождающего:</strong> {{ v.escort_phone }}
+                    <strong>Телефон ответственного:</strong> {{ v.escort_phone }}
                 </p>
                 {% endif %}
             </div>
@@ -42,4 +41,6 @@
         </div>
     </div>
     {% endif %}
+{% empty %}
+    <p class="text-center text-muted py-5">Архив заявок для этого КПП пуст...</p>
 {% endfor %}

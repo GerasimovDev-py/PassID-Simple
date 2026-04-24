@@ -1,0 +1,86 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ru.js"></script>
+
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+            <div class="row g-0">
+                <div class="col-md-7 p-5 bg-white">
+                    <h2 class="mb-4 fw-bold">Регистрация пропуска</h2>
+                    
+                    <div class="alert alert-success mb-4">
+                        Вы оформляете пропуск как ответственный: <strong>{{ responsible_name }}</strong>
+                    </div>
+                    
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Марка автомобиля</label>
+                            <input type="text" name="full_name" class="form-control" placeholder="Например: Toyota Camry" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Автомобильный номер</label>
+                            <input type="text" name="document_number" class="form-control" placeholder="А123ВС 777" required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">
+                                <i class="bi bi-calendar3 me-2"></i>Дата пропуска
+                            </label>
+                            <input type="text" 
+                                   id="valid_date" 
+                                   name="valid_date" 
+                                   class="form-control" 
+                                   placeholder="Выберите дату" 
+                                   required>
+                            <small class="text-muted">Пропуск будет активен ТОЛЬКО в выбранную дату</small>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label">Комментарий (необязательно)</label>
+                            <textarea name="comment" class="form-control" rows="3" 
+                                      placeholder="Дополнительная информация, если нужно..."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn-passid w-100 mt-3">
+                            СФОРМИРОВАТЬ ЗАПРОС НА ДОПУСК
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="col-md-5 p-5" style="background: #f8fafc; border-left: 1px solid #edf2f7;">
+                    <div class="d-flex align-items-center mb-4">
+                        <span class="request-department">ОТВЕТСТВЕННЫЙ</span>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">ФИО ответственного</label>
+                        <input type="text" class="form-control" value="{{ responsible_name }}" readonly style="background-color: #e9ecef;">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Телефон ответственного</label>
+                        <input type="text" class="form-control" value="{{ responsible_phone }}" readonly style="background-color: #e9ecef;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    flatpickr("#valid_date", {
+        dateFormat: "d.m.Y",
+        minDate: "today",
+        locale: "ru",  // русский язык
+        allowInput: true
+    });
+</script>
+
+{% endblock %}

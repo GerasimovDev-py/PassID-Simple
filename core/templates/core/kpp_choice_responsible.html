@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">PassID</h1>
+        <p class="lead text-muted">Выберите контрольно-пропускной пункт</p>
+    </div>
+
+    <div class="row justify-content-center g-4">
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 shadow border-0" style="border-radius: 20px;">
+                <div class="card-body p-5 text-center d-flex flex-column">
+                    <i class="bi bi-door-open-fill mb-4" style="font-size: 4.5rem; color: #0d6efd;"></i>
+                    <h3 class="mb-3">КПП-1</h3>
+                    <p class="text-muted flex-grow-1">ул.Бажова</p>
+                    <a href="{% url 'responsible_kpp_choice' %}?kpp=kpp1" class="btn btn-primary btn-lg mt-auto py-3">
+                        Выбрать КПП-1
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6">
+            <div class="card h-100 shadow border-0" style="border-radius: 20px;">
+                <div class="card-body p-5 text-center d-flex flex-column">
+                    <i class="bi bi-door-open-fill mb-4" style="font-size: 4.5rem; color: #0d6efd;"></i>
+                    <h3 class="mb-3">КПП-2</h3>
+                    <p class="text-muted flex-grow-1">ул.К.Мяготина</p>
+                    <a href="{% url 'responsible_kpp_choice' %}?kpp=kpp2" class="btn btn-primary btn-lg mt-auto py-3">
+                        Выбрать КПП-2
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
