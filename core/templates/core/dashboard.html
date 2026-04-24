@@ -30,7 +30,6 @@
     </div>
 </div>
 
-<!-- Модальное окно для комментария -->
 <div class="modal fade" id="commentModal" tabindex="-1" aria-labelledby="commentModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -48,7 +47,6 @@
 </div>
 
 <script>
-// Отметить как ушедшего
 function markDeparted(pk) {
     if (!confirm('Отметить посетителя как ушедшего?')) return;
 
@@ -66,7 +64,6 @@ function markDeparted(pk) {
     form.submit();
 }
 
-// Показать комментарий — улучшенная версия
 function showComment(comment) {
     if (!comment || comment.trim() === '') {
         alert('Комментарий пустой');
@@ -76,13 +73,11 @@ function showComment(comment) {
     document.getElementById('commentText').innerHTML = 
         '<p>' + comment.replace(/\n/g, '<br>') + '</p>';
     
-    // Используем Bootstrap 5 правильный способ
     const modalElement = document.getElementById('commentModal');
     const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
     modal.show();
 }
 
-// Автообновление активных заявок
 function updateActive() {
     fetch("{% url 'dashboard_partial' %}?tab=active")
         .then(response => response.text())

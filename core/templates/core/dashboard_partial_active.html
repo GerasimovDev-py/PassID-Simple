@@ -1,6 +1,5 @@
 {% for v in visitors %}
     {% if v.status != 'departed' %}
-        {% comment %}Проверяем, что сегодняшняя дата равна дате пропуска{% endcomment %}
         {% now "Y-m-d" as today %}
         {% with v.valid_until|date:"Y-m-d" as pass_date %}
             {% if today == pass_date %}
